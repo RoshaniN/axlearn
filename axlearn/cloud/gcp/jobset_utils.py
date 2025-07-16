@@ -4,7 +4,8 @@
 
 import io
 import logging
-import math
+
+# import math
 import os
 from dataclasses import dataclass
 from typing import Any, Optional, Sequence
@@ -27,8 +28,7 @@ from axlearn.cloud.common.utils import (
 )
 from axlearn.cloud.gcp.config import gcp_settings
 from axlearn.cloud.gcp.node_pool import PRE_PROVISIONER_LABEL
-from axlearn.cloud.gcp.system_characteristics import (
-    GCE_MACHINE_TYPE_TO_MEMORY_CHARACTERISTICS,
+from axlearn.cloud.gcp.system_characteristics import (  # GCE_MACHINE_TYPE_TO_MEMORY_CHARACTERISTICS,
     USER_FACING_NAME_TO_SYSTEM_CHARACTERISTICS,
 )
 from axlearn.cloud.gcp.tpu import get_default_env, infer_tpu_workers
@@ -453,13 +453,13 @@ class TPUReplicatedJob(SingleReplicatedJob):
 
         resources = {"limits": {"google.com/tpu": system.chips_per_vm}}
         # Set request memory by host machine type.
-        machine_memory_gi = GCE_MACHINE_TYPE_TO_MEMORY_CHARACTERISTICS.get(
-            system.gce_machine_type, None
-        )
-        if machine_memory_gi is not None:
-            request_memory_gi = machine_memory_gi * _MEMORY_REQUEST_PERCENTAGE
-            resources["limits"]["memory"] = f"{machine_memory_gi}Gi"
-            resources["requests"] = {"memory": f"{math.floor(request_memory_gi)}Gi"}
+        # machine_memory_gi = GCE_MACHINE_TYPE_TO_MEMORY_CHARACTERISTICS.get(
+        #     system.gce_machine_type, None
+        # )
+        # if machine_memory_gi is not None:
+        #     request_memory_gi = machine_memory_gi * _MEMORY_REQUEST_PERCENTAGE
+        #     resources["limits"]["memory"] = f"{machine_memory_gi}Gi"
+        #     resources["requests"] = {"memory": f"{math.floor(request_memory_gi)}Gi"}
 
         k8s_env_vars = [dict(name=k, value=str(v)) for k, v in env_vars.items()]
         k8s_env_vars.append(
@@ -509,8 +509,8 @@ class TPUReplicatedJob(SingleReplicatedJob):
         interval_s = 60
         sync_command = f"while true; do gsutil -m rsync -r {src} {dst}; sleep {interval_s}; done"
         resources = {
-            "requests": {"cpu": "100m", "memory": "128Mi"},
-            "limits": {"cpu": "500m", "memory": "256Mi"},
+            # "requests": {"cpu": "100m", "memory": "128Mi"},
+            # "limits": {"cpu": "500m", "memory": "256Mi"},
         }
         return dict(
             name="output-uploader",

@@ -219,7 +219,7 @@ def tfds_dataset(
     *,
     split: str,
     is_training: bool,
-    train_shuffle_buffer_size: Optional[int] = None,
+    train_shuffle_buffer_size: 0 = None,
     train_shuffle_files: Optional[bool] = None,
     data_dir: Optional[str] = None,
     download: bool = False,

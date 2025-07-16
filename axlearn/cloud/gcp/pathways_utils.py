@@ -164,21 +164,21 @@ class PathwaysReplicatedJob(BaseReplicatedJob):
         flags.DEFINE_string(
             "pathways_head_cpu",
             None,
-            "CPU request for pathways-head container in cores. Default is 1 core.",
+            "CPU request for pathways-head container in cores. Default is 16 core.",
             **common_kwargs,
         )
         flags.DEFINE_string(
             "pathways_head_mem",
             None,
-            "Memory request for pathways-head container in GiB. Default is 16GiB",
+            "Memory request for pathways-head container in GiB. Default is 32GiB",
             **common_kwargs,
         )
 
     @classmethod
     def set_defaults(cls, fv):
         super().set_defaults(fv)
-        fv.set_default("pathways_head_cpu", fv.pathways_head_cpu or "1")
-        fv.set_default("pathways_head_mem", fv.pathways_head_mem or "16")
+        fv.set_default("pathways_head_cpu", fv.pathways_head_cpu or "16")
+        fv.set_default("pathways_head_mem", fv.pathways_head_mem or "32")
 
     @classmethod
     def default_config(cls):
@@ -446,6 +446,11 @@ class PathwaysReplicatedJob(BaseReplicatedJob):
         annotations = _LoadBalancer(
             jobset_name=cfg.name, replicated_job_name=_PATHWAYS_HEAD_REPLICATED_JOB_NAME
         ).metadata
+        annotations.update(
+            {
+                "alpha.jobset.sigs.k8s.io/exclusive-topology": "kubernetes.io/hostname",
+            }
+        )
         spec = dict(
             parallelism=1,
             completions=1,
